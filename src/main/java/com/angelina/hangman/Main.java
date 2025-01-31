@@ -8,8 +8,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String choice;
 
-        clearConsole();
-
         while (true) {
             showMenu();
             choice = scanner.nextLine().trim();
@@ -29,7 +27,6 @@ public class Main {
 
             System.out.println("Presiona ENTER para continuar...");
             scanner.nextLine();
-
             clearConsole();
         }
     }
@@ -43,4 +40,5 @@ public class Main {
     static void clearConsole() throws IOException, InterruptedException {
         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     }
+
 }

@@ -3,16 +3,18 @@ package com.angelina.hangman;
 import java.util.Scanner;
 
 public class StringUtils {
-    static char readSingleLetter(Scanner scanner, String label, String errorMessage) {
+    static char readPossibleChar(Scanner scanner, String label, String errorMessage) {
         while (true) {
             System.out.println(label);
             String input = scanner.nextLine().trim().toUpperCase();
             if (input.length() == 1 && (input.charAt(0) >= 'A' && input.charAt(0) <= 'Z')) {
                 return input.charAt(0);
+            } else {
+                System.out.println(errorMessage);
             }
-            System.out.println(errorMessage);
         }
     }
+
 
     static String readSingleWord(Scanner scanner, String label, String errorMessage) {
         String disallowedChars = ".,;:-!/&%#\"";
