@@ -1,8 +1,7 @@
 package com.angelina.hangman;
 
 public class HangmanFrames {
-    public static String[] getFrames() {
-        return new String[]{
+    static String[] Frames = new String[]{
                 // 1 error
                 """
                  +---+
@@ -50,7 +49,7 @@ public class HangmanFrames {
                      |
                 =========""",
 
-               //  x6 error(es)\n\n"
+               //  x6 error(es)"
                 """
                  +---+
                  |   |
@@ -59,7 +58,7 @@ public class HangmanFrames {
                 /    |
                 =========""",
 
-                // x7 error(es)\n\n"
+                // x7 error(es)"
                 """
                  +---+
                  |   |
@@ -71,4 +70,3 @@ public class HangmanFrames {
 
     }
 
-}

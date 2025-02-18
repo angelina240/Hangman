@@ -1,26 +1,29 @@
 package com.angelina.hangman;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class StringUtils {
+
     static char readPossibleChar(Scanner scanner, String label, String errorMessage) {
         while (true) {
             System.out.println(label);
             String input = scanner.nextLine().trim().toUpperCase();
-            if (input.length() == 1 && (input.charAt(0) >= 'A' && input.charAt(0) <= 'Z')) {
+
+            if (input.length() == 1 && input.matches("[A-ZÑÁÉÍÓÚ]")) {
                 return input.charAt(0);
-            } else {
-                System.out.println(errorMessage);
             }
+            System.out.println(errorMessage);
         }
     }
 
 
     static String readSingleWord(Scanner scanner, String label, String errorMessage) {
         String disallowedChars = ".,;:-!/&%#\"";
+
         while (true) {
             System.out.println(label);
-            String text = scanner.nextLine().trim();
+            String text = scanner.nextLine().trim().toUpperCase();
+
             boolean isEmptyOrHasSpaces = text.isEmpty() || text.contains(" ");
             boolean hasInvalidChar = false;
 
@@ -31,6 +34,7 @@ public class StringUtils {
                     break;
                 }
             }
+
             if (!isEmptyOrHasSpaces && !hasInvalidChar) {
                 return text;
             }
