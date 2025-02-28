@@ -40,31 +40,32 @@ public class Hangman {
         String feedbackMessage = null;
 
         while (attempts < MAX_ATTEMPTS) {
+            clearConsole();
             showGameProgress(word, hiddenWord);
             showGameState(attempts);
 
-            clearConsole();
-            if (feedbackMessage != null)
+            if (feedbackMessage != null) {
                 System.out.println(feedbackMessage);
-
+            }
             char character = Character.toUpperCase(readGuessedLetter());
-
             feedbackMessage = warnIfLetterAlreadyEntered(character, usedLetters);
-            if (showFeedbackMessageIfExist(feedbackMessage)) {
+            if (feedbackMessage != null) {
                 continue;
             }
-
             boolean match = updateHiddenWord(word, hiddenWord, character);
             usedLetters += character;
             feedbackMessage = getFeedbackAttempt(match);
+
             if (!match)
                 attempts++;
+
             if (!hasHiddenLetters(hiddenWord))
                 return "¡FELICIDADES! HAS GANADO :)";
         }
 
         return "¡OH NO! HAS PERDIDO. （︶^︶） LA PALABRA ERA: " + word;
     }
+
 
     void showGameProgress(String word, StringBuilder hiddenWord) {
         System.out.println("-------------------------------------------------");
@@ -98,10 +99,6 @@ public class Hangman {
             }
         }
         return match;
-    }
-
-    private boolean showFeedbackMessageIfExist(String feedbackMessage) {
-        return feedbackMessage != null;
     }
 
     String warnIfLetterAlreadyEntered(char character, String usedLetters) {
