@@ -1,5 +1,4 @@
 package com.angelina.hangman;
-
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -15,9 +14,9 @@ public class Hangman {
 
     public String runGame() throws IOException, InterruptedException {
         System.out.println("""
-            **************************************+***********************
-            xxx ¡Bienvenido al Juego del Ahorcado ╰(*°▽°*)╯ ! xxx
-            """);
+                **************************************+***********************
+                +++ ¡Bienvenido al Juego del Ahorcado ╰(*°▽°*)╯ ! +++
+                """);
         String word = readWord();
         clearConsole();
         StringBuilder hiddenWord = createHiddenWord(word);
@@ -26,7 +25,7 @@ public class Hangman {
 
     String readWord() {
         return StringUtils.readSingleWord(scanner,
-                "XXX Ingresa la palabra que quieres que el otro jugador adivine XXX" +
+                ">>> Ingresa la palabra que quieres que el otro jugador adivine <<<" +
                         "\n **************************************+*********************** ",
                 "--- Eso no parece una palabra 😒 ---").toUpperCase();
     }
@@ -35,6 +34,37 @@ public class Hangman {
         return new StringBuilder("_".repeat(word.length()));
     }
 
+    String runGameLoop(String word, StringBuilder hiddenWord) throws IOException, InterruptedException {
+        int attempts = 0;
+        String usedLetters = "";
+        String feedbackMessage = null;
+
+        while (attempts < MAX_ATTEMPTS) {
+            showGameProgress(word, hiddenWord);
+            showGameState(attempts);
+
+            clearConsole();
+            if (feedbackMessage != null)
+                System.out.println(feedbackMessage);
+
+            char character = Character.toUpperCase(readGuessedLetter());
+
+            feedbackMessage = warnIfLetterAlreadyEntered(character, usedLetters);
+            if (showFeedbackMessageIfExist(feedbackMessage)) {
+                continue;
+            }
+
+            boolean match = updateHiddenWord(word, hiddenWord, character);
+            usedLetters += character;
+            feedbackMessage = getFeedbackAttempt(match);
+            if (!match)
+                attempts++;
+            if (!hasHiddenLetters(hiddenWord))
+                return "¡FELICIDADES! HAS GANADO :)";
+        }
+
+        return "¡OH NO! HAS PERDIDO. （︶^︶） LA PALABRA ERA: " + word;
+    }
 
     void showGameProgress(String word, StringBuilder hiddenWord) {
         System.out.println("-------------------------------------------------");
@@ -44,18 +74,19 @@ public class Hangman {
     }
 
     void showGameState(int attempts) {
-        System.out.println("\nXXX Te quedan " + (MAX_ATTEMPTS - attempts) + " intentos XXX");
-        showFrame(attempts);
+        System.out.println("\n!Te quedan " + (MAX_ATTEMPTS - attempts) + " intentos!");
+        if (attempts > 0)
+            showFrame(attempts);
     }
 
     char readGuessedLetter() {
         return StringUtils.readPossibleChar(scanner,
                 """
                         
-                        XXX Ingresa la letra que crees que sea XXX\
+                        >>> Ingresa la letra que crees que sea <<<\
                         
                          -------------------------------------------------""",
-                "--- Eso no parece una letra >:( ---");
+                "xxx Eso no parece una letra >:( xxx");
     }
 
     boolean updateHiddenWord(String word, StringBuilder hiddenWord, char character) {
@@ -69,57 +100,20 @@ public class Hangman {
         return match;
     }
 
-    String runGameLoop(String word, StringBuilder hiddenWord) throws IOException, InterruptedException {
-        int attempts = 0;
-        String usedLetters = "";
-        String feedbackMessage = "";
-
-        while (attempts < MAX_ATTEMPTS) {
-            showGameProgress(word, hiddenWord);
-            showGameState(attempts);
-
-            clearConsole();
-            if (!feedbackMessage.isEmpty()) {
-                System.out.println(feedbackMessage);
-            }
-
-            char character = Character.toUpperCase(readGuessedLetter());
-            boolean match = updateHiddenWord(word, hiddenWord, character);
-
-            feedbackMessage = warnIfLetterAlreadyEntered(character, usedLetters);
-            if (!feedbackMessage.isEmpty()) {
-                continue;
-            }
-            usedLetters += character;
-
-
-            feedbackMessage = updateGameStatus(match, attempts);
-            if (!match) {
-                attempts++;
-            }
-
-            if (!hasHiddenLetters(hiddenWord)) {
-                return "¡FELICIDADES! HAS GANADO :)";
-            }
-        }
-
-        return "¡OH NO! HAS PERDIDO. （︶^︶） LA PALABRA ERA: " + word;
+    private boolean showFeedbackMessageIfExist(String feedbackMessage) {
+        return feedbackMessage != null;
     }
 
     String warnIfLetterAlreadyEntered(char character, String usedLetters) {
-        if (usedLetters.indexOf(character) != -1) {
+        if (usedLetters.contains(String.valueOf(character)))
             return "XXX ¡Ya ingresaste esa letra! Intenta con otra. XXX";
-        }
-        return "";
+        return null;
     }
 
-    String updateGameStatus(boolean match, int attempts) {
-        if (match) {
-            return "\n¡MUY BIEN! SIGUE ASÍ :)";
-        } else {
-            attempts++;
-            return "XXX INCORRECTO :( SUERTE EN LA SIGUIENTE XXX";
-        }
+    String getFeedbackAttempt(boolean match) {
+        return match
+                ? "\n¡MUY BIEN! SIGUE ASÍ :)"
+                : "XXX INCORRECTO :( SUERTE EN LA SIGUIENTE XXX";
     }
 
     boolean hasHiddenLetters(StringBuilder hiddenWord) {
@@ -127,8 +121,6 @@ public class Hangman {
     }
 
     void showFrame(int attempts) {
-        if (attempts > 0) {
-            System.out.println(HangmanFrames.Frames[attempts - 1]);
-        }
+        System.out.println(HangmanFrames.Frames[attempts - 1]);
     }
 }
