@@ -12,15 +12,17 @@ public class Hangman {
         this.scanner = scanner;
     }
 
-    public String runGame() throws IOException, InterruptedException {
+    public void runGame() throws IOException, InterruptedException {
         System.out.println("""
-                **************************************+***********************
-                +++ ¡Bienvenido al Juego del Ahorcado ╰(*°▽°*)╯ ! +++
-                """);
+            **************************************+***********************
+            +++ ¡Bienvenido al Juego del Ahorcado ╰(*°▽°*)╯ ! +++
+            """);
         String word = readWord();
         clearConsole();
         StringBuilder hiddenWord = createHiddenWord(word);
-        return runGameLoop(word, hiddenWord);
+        String message = runGameLoop(word, hiddenWord);
+        System.out.println(message);
+        scanner.nextLine();
     }
 
     String readWord() {
@@ -47,23 +49,32 @@ public class Hangman {
             if (feedbackMessage != null) {
                 System.out.println(feedbackMessage);
             }
+
             char character = Character.toUpperCase(readGuessedLetter());
             feedbackMessage = warnIfLetterAlreadyEntered(character, usedLetters);
             if (feedbackMessage != null) {
                 continue;
             }
+
             boolean match = updateHiddenWord(word, hiddenWord, character);
             usedLetters += character;
             feedbackMessage = getFeedbackAttempt(match);
 
-            if (!match)
+            if (!match) {
                 attempts++;
+            }
 
-            if (!hasHiddenLetters(hiddenWord))
-                return "¡FELICIDADES! HAS GANADO :)";
+            if (!hasHiddenLetters(hiddenWord)) {
+                return getGameResultMessage(word, true);
+            }
         }
+        return getGameResultMessage(word, false);
+    }
 
-        return "¡OH NO! HAS PERDIDO. （︶^︶） LA PALABRA ERA: " + word;
+    String getGameResultMessage(String word, boolean won) {
+        return won
+                ? "¡FELICIDADES! HAS GANADO :)"
+                : "¡OH NO! HAS PERDIDO. （︶^︶） LA PALABRA ERA: " + word;
     }
 
 

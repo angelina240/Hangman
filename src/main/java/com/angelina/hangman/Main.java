@@ -17,7 +17,8 @@ public class Main {
             switch (choice) {
                 case "1":
                     clearConsole();
-                    message = new Hangman(scanner).runGame();
+                    new Hangman(scanner).runGame();
+                    clearConsole();
                     break;
                 case "0":
                     System.out.println("¡Gracias por jugar! :)");
