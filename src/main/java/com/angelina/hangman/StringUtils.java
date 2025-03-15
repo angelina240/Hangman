@@ -17,11 +17,11 @@ public class StringUtils {
     }
 
 
-    static String readSingleWord(Scanner scanner, String label, String errorMessage) {
+    static String readSingleWord(Scanner scanner, String errorMessage) {
         String disallowedChars = ".,;:-!/&%#\"";
 
         while (true) {
-            System.out.println(label);
+            System.out.println(">>> Ingresa la palabra que quieres que el otro jugador adivine <<<\n **************************************+*********************** ");
             String text = scanner.nextLine().trim().toUpperCase();
 
             boolean isEmptyOrHasSpaces = text.isEmpty() || text.contains(" ");

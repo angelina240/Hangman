@@ -22,13 +22,12 @@ public class Hangman {
         StringBuilder hiddenWord = createHiddenWord(word);
         String message = runGameLoop(word, hiddenWord);
         System.out.println(message);
+        System.out.println("---- Presiona ENTER para continuar U_U ----");
         scanner.nextLine();
     }
 
     String readWord() {
         return StringUtils.readSingleWord(scanner,
-                ">>> Ingresa la palabra que quieres que el otro jugador adivine <<<" +
-                        "\n **************************************+*********************** ",
                 "--- Eso no parece una palabra 😒 ---").toUpperCase();
     }
 
